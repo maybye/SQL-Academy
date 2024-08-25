@@ -316,3 +316,209 @@ WHERE NOT EXISTS (
 )
   ```
 </details>
+
+26. Определить группы товаров, которые не приобретались в 2005 году
+<details><summary>Решение</summary>
+
+  ```
+SELECT good_type_name
+FROM  GoodTypes gt 
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM Goods g
+    JOIN Payments p ON g.good_id = p.good
+    WHERE g.type = gt.good_type_id
+      AND DATE_FORMAT(p.date, "%Y") = 2005
+)
+GROUP BY good_type_id
+  ```
+</details>
+
+27. Узнайте, сколько было потрачено на каждую из групп товаров в 2005 году. Выведите название группы и потраченную на неё сумму. Если потраченная сумма равна нулю, т.е. товары из этой группы не покупались в 2005 году, то не выводите её.
+<details><summary>Решение</summary>
+
+  ```
+SELECT good_type_name, SUM(amount*unit_price) as costs
+FROM Goods
+    JOIN Payments
+    ON Goods.good_id = Payments.good
+    JOIN GoodTypes
+    ON GoodTypes.good_type_id = Goods.type
+WHERE YEAR(date) = 2005
+GROUP BY good_type_name
+
+  ```
+</details>
+
+28. Сколько рейсов совершили авиакомпании из Ростова (Rostov) в Москву (Moscow) ?
+<details><summary>Решение</summary>
+
+  ```
+SELECT COUNT(id) as count
+FROM Trip
+WHERE town_from = 'Rostov' AND town_to = 'Moscow'
+
+  ```
+</details>
+
+29. Выведите имена пассажиров улетевших в Москву (Moscow) на самолете TU-134
+<details><summary>Решение</summary>
+
+  ```
+SELECT DISTINCT name
+FROM Pass_in_trip pt
+    JOIN Trip t
+    ON pt.trip = t.id
+    JOIN Passenger p
+    ON p.id = pt.passenger
+WHERE town_to = 'Moscow' and plane = 'TU-134'
+
+  ```
+</details>
+
+30. Выведите нагруженность (число пассажиров) каждого рейса (trip). Результат вывести в отсортированном виде по убыванию нагруженности.
+<details><summary>Решение</summary>
+
+  ```
+SELECT COUNT(passenger) as count, trip
+FROM Pass_in_trip
+GROUP BY trip
+ORDER BY count DESC
+
+  ```
+</details>
+
+31. Вывести всех членов семьи с фамилией Quincey.
+<details><summary>Решение</summary>
+
+  ```
+SELECT *
+FROM FamilyMembers
+WHERE member_name LIKE '%Quincey%'
+
+  ```
+</details>
+
+32. Вывести средний возраст людей (в годах), хранящихся в базе данных. Результат округлите до целого в меньшую сторону.
+<details><summary>Решение</summary>
+
+  ```
+SELECT ROUND(AVG(TIMESTAMPDIFF(year, birthday, current_date )), 0) as age
+FROM FamilyMembers
+
+  ```
+</details>
+
+33. Найдите среднюю цену икры на основе данных, хранящихся в таблице Payments. В базе данных хранятся данные о покупках красной (red caviar) и черной икры (black caviar). В ответе должна быть одна строка со средней ценой всей купленной когда-либо икры.
+<details><summary>Решение</summary>
+
+  ```
+SELECT AVG(unit_price) as cost
+FROM Payments
+    JOIN Goods
+    ON Payments.good = Goods.good_id
+WHERE good_name LIKE "%caviar"
+
+  ```
+</details>
+
+34. Сколько всего 10-ых классов
+<details><summary>Решение</summary>
+
+  ```
+SELECT COUNT(id) as count
+FROM Class
+WHERE name LIKE "10%"
+  ```
+</details>
+
+35. Сколько различных кабинетов школы использовались 2 сентября 2019 года для проведения занятий?
+<details><summary>Решение</summary>
+
+  ```
+SELECT COUNT(DISTINCT classroom) as count
+FROM Schedule
+WHERE DATE_FORMAT(date, "%d/%m/%Y") = '02/09/2019'
+  ```
+</details>
+
+36. Выведите информацию об обучающихся живущих на улице Пушкина (ul. Pushkina)?
+<details><summary>Решение</summary>
+
+  ```
+SELECT *
+FROM Student
+WHERE address LIKE "%ul. Pushkina%"
+  ```
+</details>
+
+37. Сколько лет самому молодому обучающемуся ?
+<details><summary>Решение</summary>
+
+  ```
+SELECT TIMESTAMPDIFF(year, birthday, current_date) as year
+FROM Student
+ORDER BY year 
+LIMIT 1
+  ```
+</details>
+
+38. Сколько Анн (Anna) учится в школе ?
+<details><summary>Решение</summary>
+
+  ```
+SELECT COUNT(id) as count
+FROM Student
+WHERE first_name = 'Anna'
+  ```
+</details>
+
+39. Сколько обучающихся в 10 B классе ?
+<details><summary>Решение</summary>
+
+  ```
+SELECT COUNT(student) as count
+FROM Student_in_class
+    JOIN Class
+    ON Class.id = Student_in_class.class
+WHERE name LIKE "10 B"
+  ```
+</details>
+
+40. Выведите название предметов, которые преподает Ромашкин П.П. (Romashkin P.P.). Обратите внимание, что в базе данных есть несколько учителей с такими фамилией и инициалами.
+<details><summary>Решение</summary>
+
+  ```
+SELECT name as subjects
+FROM Schedule
+    JOIN Teacher
+    ON Teacher.id = Schedule.teacher
+    JOIN Subject
+    ON Subject.id = Schedule.subject
+WHERE first_name LIKE "P%" AND middle_name LIKE "P%" AND last_name = 'Romashkin'
+  ```
+</details>
+
+41. Выясните, во сколько по расписанию начинается четвёртое занятие.
+<details><summary>Решение</summary>
+
+  ```
+SELECT DISTINCT start_pair
+FROM Schedule
+    JOIN Timepair
+    ON Schedule.number_pair = Timepair.id
+WHERE number_pair = 4
+  ```
+</details>
+
+42. Сколько времени обучающийся будет находиться в школе, учась со 2-го по 4-ый уч. предмет?
+<details><summary>Решение</summary>
+
+  ```
+SELECT DISTINCT start_pair
+FROM Schedule
+    JOIN Timepair
+    ON Schedule.number_pair = Timepair.id
+WHERE number_pair = 4
+  ```
+</details>
