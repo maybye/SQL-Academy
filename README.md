@@ -511,19 +511,7 @@ WHERE number_pair = 4
   ```
 </details>
 
-42. Сколько времени обучающийся будет находиться в школе, учась со 2-го по 4-ый уч. предмет?
-<details><summary>Решение</summary>
-
-  ```
-SELECT DISTINCT start_pair
-FROM Schedule
-    JOIN Timepair
-    ON Schedule.number_pair = Timepair.id
-WHERE number_pair = 4
-  ```
-</details>
-
-43 (53). Измените имя "Andie Quincey" на новое "Andie Anthony".
+42 (53). Измените имя "Andie Quincey" на новое "Andie Anthony".
 <details><summary>Решение</summary>
 
   ```
@@ -533,7 +521,7 @@ WHERE member_name = 'Andie Quincey';
   ```
 </details>
 
-44 (56). Удалить все перелеты, совершенные из Москвы (Moscow).
+43 (56). Удалить все перелеты, совершенные из Москвы (Moscow).
 <details><summary>Решение</summary>
 
   ```
@@ -543,7 +531,7 @@ WHERE town_from = 'Moscow';
   ```
 </details>
 
-45 (74). Выведите идентификатор и признак наличия интернета в помещении. Если интернет в сдаваемом жилье присутствует, то выведите «YES», иначе «NO».
+44 (74). Выведите идентификатор и признак наличия интернета в помещении. Если интернет в сдаваемом жилье присутствует, то выведите «YES», иначе «NO».
 <details><summary>Решение</summary>
 
   ```
@@ -553,7 +541,7 @@ FROM ROOMS
   ```
 </details>
 
-46 (75). Выведите фамилию, имя и дату рождения студентов, кто был рожден в мае.
+45 (75). Выведите фамилию, имя и дату рождения студентов, кто был рожден в мае.
 <details><summary>Решение</summary>
 
   ```
@@ -563,7 +551,7 @@ WHERE MONTH(birthday) = 5
   ```
 </details>
 
-47 (93). Какой средний возраст клиентов, купивших Smartwatch (использовать наименование товара product.name) в 2024 году?
+46 (93). Какой средний возраст клиентов, купивших Smartwatch (использовать наименование товара product.name) в 2024 году?
 <details><summary>Решение</summary>
 
   ```
@@ -580,7 +568,7 @@ WHERE customer_key IN (SELECT customer_key FROM orders)
   ```
 </details>
 
-48 (94). Вывести имена покупателей, каждый из которых приобрёл Laptop и Monitor (использовать наименование товара product.name) в марте 2024 года?
+47 (94). Вывести имена покупателей, каждый из которых приобрёл Laptop и Monitor (использовать наименование товара product.name) в марте 2024 года?
 <details><summary>Решение</summary>
 
   ```
@@ -599,7 +587,7 @@ WITH t AS
   ```
 </details>
 
-49 (99). Посчитай доход с женской аудитории (доход = сумма(price * items)). Обратите внимание, что в таблице женская аудитория имеет поле user_gender «female» или «f».
+48 (99). Посчитай доход с женской аудитории (доход = сумма(price * items)). Обратите внимание, что в таблице женская аудитория имеет поле user_gender «female» или «f».
 <details><summary>Решение</summary>
 
   ```
@@ -609,7 +597,7 @@ WHERE user_gender LIKE 'f%'
   ```
 </details>
 
-50 (103). Вывести список имён сотрудников, получающих большую заработную плату, чем у непосредственного руководителя.
+49 (103). Вывести список имён сотрудников, получающих большую заработную плату, чем у непосредственного руководителя.
 <details><summary>Решение</summary>
 
   ```
@@ -619,7 +607,7 @@ WHERE chieves.id = employees.chief_id AND employees.salary > chieves.salary;
   ```
 </details>
 
-51 (109). Выведите название страны, где находится город «Salzburg»
+50 (109). Выведите название страны, где находится город «Salzburg»
 <details><summary>Решение</summary>
 
   ```
@@ -633,11 +621,11 @@ WHERE Cities.name = 'Salzburg'
   ```
 </details>
 
-52 (111). Посчитайте население каждого региона. В качестве результата выведите название региона и его численность населения.
+51 (111). Посчитайте население каждого региона. В качестве результата выведите название региона и его численность населения.
 <details><summary>Решение</summary>
 
   ```
-SSELECT Regions.name as region_name,
+SELECT Regions.name as region_name,
     SUM(population) as  total_population
 FROM Cities
     JOIN Regions
