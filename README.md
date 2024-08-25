@@ -522,3 +522,126 @@ FROM Schedule
 WHERE number_pair = 4
   ```
 </details>
+
+43 (53). Измените имя "Andie Quincey" на новое "Andie Anthony".
+<details><summary>Решение</summary>
+
+  ```
+UPDATE FamilyMembers
+SET member_name = 'Andie Anthony'
+WHERE member_name = 'Andie Quincey';
+  ```
+</details>
+
+44 (56). Удалить все перелеты, совершенные из Москвы (Moscow).
+<details><summary>Решение</summary>
+
+  ```
+DELETE
+FROM trip
+WHERE town_from = 'Moscow';
+  ```
+</details>
+
+45 (74). Выведите идентификатор и признак наличия интернета в помещении. Если интернет в сдаваемом жилье присутствует, то выведите «YES», иначе «NO».
+<details><summary>Решение</summary>
+
+  ```
+SELECT id, 
+        IF(has_internet = 1, 'YES', 'NO') as has_internet
+FROM ROOMS
+  ```
+</details>
+
+46 (75). Выведите фамилию, имя и дату рождения студентов, кто был рожден в мае.
+<details><summary>Решение</summary>
+
+  ```
+SELECT last_name, first_name, birthday
+FROM Student
+WHERE MONTH(birthday) = 5
+  ```
+</details>
+
+47 (93). Какой средний возраст клиентов, купивших Smartwatch (использовать наименование товара product.name) в 2024 году?
+<details><summary>Решение</summary>
+
+  ```
+WITH orders AS 
+    (SELECT  customer_key 
+    FROM Purchase
+    WHERE product_key IN (SELECT product_key FROM Product WHERE name = 'Smartwatch')
+        AND DATE_FORMAT(date, "%Y") = 2024)
+
+SELECT AVG(age) as average_age
+FROM Customer
+WHERE customer_key IN (SELECT customer_key FROM orders)
+
+  ```
+</details>
+
+48 (94). Вывести имена покупателей, каждый из которых приобрёл Laptop и Monitor (использовать наименование товара product.name) в марте 2024 года?
+<details><summary>Решение</summary>
+
+  ```
+WITH t AS 
+    (SELECT customer_key 
+    FROM Purchase
+    WHERE product_key IN (SELECT product_key FROM Product WHERE name = 'Laptop') 
+        AND DATE_FORMAT(date, "%Y") = 2024 
+        AND DATE_FORMAT(date, "%b") = 'Mar'),
+    t2 AS
+    (SELECT customer_key 
+    FROM Purchase
+    WHERE product_key IN (SELECT product_key FROM Product WHERE name = 'Monitor') 
+        AND DATE_FORMAT(date, "%Y") = 2024 
+        AND DATE_FORMAT(date, "%b") = 'Mar')
+  ```
+</details>
+
+49 (99). Посчитай доход с женской аудитории (доход = сумма(price * items)). Обратите внимание, что в таблице женская аудитория имеет поле user_gender «female» или «f».
+<details><summary>Решение</summary>
+
+  ```
+SELECT SUM(price*items) as income_from_female
+FROM Purchases
+WHERE user_gender LIKE 'f%'
+  ```
+</details>
+
+50 (103). Вывести список имён сотрудников, получающих большую заработную плату, чем у непосредственного руководителя.
+<details><summary>Решение</summary>
+
+  ```
+SELECT employees.name
+FROM Employee AS employees, Employee AS chieves
+WHERE chieves.id = employees.chief_id AND employees.salary > chieves.salary;
+  ```
+</details>
+
+51 (109). Выведите название страны, где находится город «Salzburg»
+<details><summary>Решение</summary>
+
+  ```
+SELECT Countries.name as country_name
+FROM Countries
+    JOIN Regions
+    ON Countries.id = Regions.countryid
+    JOIN Cities
+    ON Regions.id = Cities.regionid
+WHERE Cities.name = 'Salzburg'
+  ```
+</details>
+
+52 (111). Посчитайте население каждого региона. В качестве результата выведите название региона и его численность населения.
+<details><summary>Решение</summary>
+
+  ```
+SSELECT Regions.name as region_name,
+    SUM(population) as  total_population
+FROM Cities
+    JOIN Regions
+    ON Cities.regionid = Regions.id
+GROUP BY Regions.name
+  ```
+</details>
