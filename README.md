@@ -515,23 +515,29 @@ WHERE number_pair = 4
   ```
 </details>
 
-42 (53). Измените имя "Andie Quincey" на новое "Andie Anthony".
+42. Сколько времени обучающийся будет находиться в школе, учась со 2-го по 4-ый уч. предмет? ★
 <details><summary>Решение</summary>
 
   ```
-UPDATE FamilyMembers
-SET member_name = 'Andie Anthony'
-WHERE member_name = 'Andie Quincey';
+SELECT TIMEDIFF(MAX(end_pair), MIN(start_pair)) as time 
+FROM Timepair
+WHERE id BETWEEN 2 and 4
+
   ```
 </details>
 
-43 (56). Удалить все перелеты, совершенные из Москвы (Moscow).
+43. Выведите фамилии преподавателей, которые ведут физическую культуру (Physical Culture). Отсортируйте преподавателей по фамилии в алфавитном порядке. ★
 <details><summary>Решение</summary>
 
   ```
-DELETE
-FROM trip
-WHERE town_from = 'Moscow';
+SELECT DISTINCT last_name
+FROM Teacher
+    JOIN Schedule
+    ON Teacher.id = Schedule.teacher
+    JOIN Subject
+    ON Subject.id = Schedule.subject
+WHERE name = 'Physical Culture'
+ORDER BY last_name
   ```
 </details>
 
